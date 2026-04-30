@@ -7,6 +7,7 @@ persist.device_config.runtime_native_boot.iorap_readahead_enable=false
 # Audio
 audio.offload.min.duration.secs=30
 media.stagefright.audio.deep=false
+<<<<<<< HEAD
 
 # Bluetooth
 bluetooth.device_id.vendor_id=0x001D
@@ -22,3 +23,5 @@ bluetooth.profile.map.server.enabled=true
 bluetooth.profile.opp.enabled=true
 bluetooth.profile.pbap.server.enabled=true
 
+=======
+>>>>>>> c215955 (sm8450-common: Move Bluetooth profile property to system_ext)
