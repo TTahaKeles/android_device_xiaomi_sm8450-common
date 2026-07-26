@@ -1,0 +1,103 @@
+From 144d5e1d0eae49179faa48e8f5cb12db838f860f Mon Sep 17 00:00:00 2001
+From: keosh <conquer2152016@gmail.com>
+Date: Wed, 27 Aug 2025 18:21:51 +0530
+Subject: [PATCH] Dolby: Add Sony Dolby Atmos fcm to fix kernel target issue
+
+---
+ BoardConfigCommon.mk                                | 3 +++
+ vintf/dolby_framework_matrix.xml                     | 18 ++++++++++++++++++
+ vintf/vendor.dolby.hardware.dms@2.0-service.xml      | 11 +++++++++++
+ vintf/vendor.dolby.media.c2.xml                      | 19 +++++++++++++++++++
+ 4 files changed, 51 insertions(+)
+ create mode 100644 vintf/dolby_framework_matrix.xml
+ create mode 100644 vintf/vendor.dolby.hardware.dms@2.0-service.xml
+ create mode 100644 vintf/vendor.dolby.media.c2.xml
+
+diff --git a/BoardConfigCommon.mk b/BoardConfigCommon.mk
+index d87a817..6d7b067 100644
+--- a/BoardConfigCommon.mk
++++ b/BoardConfigCommon.mk
+@@ -210,6 +210,8 @@ DEVICE_MATRIX_FILE := hardware/qcom-caf/common/compatibility_matrix.xml
+ DEVICE_MANIFEST_SKUS := taro diwali cape ukee
+ $(foreach sku, $(call to-upper, $(DEVICE_MANIFEST_SKUS)), \
+ 	$(eval DEVICE_MANIFEST_$(sku)_FILES += \
++		$(COMMON_PATH)/vintf/vendor.dolby.media.c2.xml \
++		$(COMMON_PATH)/vintf/vendor.dolby.hardware.dms@2.0-service.xml \
+ 		$(COMMON_PATH)/vintf/manifest.xml \
+ 		$(COMMON_PATH)/vintf/manifest_xiaomi.xml \
+ 		$(if $(TARGET_NFC_SUPPORTED_SKUS),$(COMMON_PATH)/vintf/manifest_no_nfc.xml,) \
+@@ -222,6 +224,7 @@ $(foreach nfc_sku, $(call to-upper, $(TARGET_NFC_SUPPORTED_SKUS)), \
+ endif
+ 
+ DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
++	$(COMMON_PATH)/vintf/dolby_framework_matrix.xml \
+ 	hardware/qcom-caf/common/vendor_framework_compatibility_matrix.xml \
+ 	hardware/xiaomi/vintf/xiaomi_framework_compatibility_matrix.xml
+diff --git a/vintf/dolby_framework_matrix.xml b/vintf/dolby_framework_matrix.xml
+new file mode 100644
+index 0000000..f157ff4
+--- /dev/null
++++ b/vintf/dolby_framework_matrix.xml
+@@ -0,0 +1,18 @@
++<compatibility-matrix version="4.0" type="framework">
++    <hal format="hidl" optional="true">
++        <name>vendor.dolby.hardware.dms</name>
++        <version>2.0</version>
++        <interface>
++            <name>IDms</name>
++            <instance>default</instance>
++        </interface>
++    </hal>
++    <hal format="hidl" optional="true">
++        <name>android.hardware.media.c2</name>
++        <version>1.0</version>
++        <interface>
++            <name>IComponentStore</name>
++            <instance>default1</instance>
++        </interface>
++    </hal>
++</compatibility-matrix>
+diff --git a/vintf/vendor.dolby.hardware.dms@2.0-service.xml b/vintf/vendor.dolby.hardware.dms@2.0-service.xml
+new file mode 100644
+index 0000000..f52fb36
+--- /dev/null
++++ b/vintf/vendor.dolby.hardware.dms@2.0-service.xml
+@@ -0,0 +1,11 @@
++<manifest version="1.0" type="device">
++    <hal format="hidl">
++        <name>vendor.dolby.hardware.dms</name>
++        <transport>hwbinder</transport>
++        <version>2.0</version>
++        <interface>
++            <name>IDms</name>
++            <instance>default</instance>
++        </interface>
++    </hal>
++</manifest>
+diff --git a/vintf/vendor.dolby.media.c2.xml b/vintf/vendor.dolby.media.c2.xml
+new file mode 100644
+index 0000000..7505995
+--- /dev/null
++++ b/vintf/vendor.dolby.media.c2.xml
+@@ -0,0 +1,19 @@
++<!--
++
++     This program is protected under international and U.S. copyright laws as
++     an unpublished work. This program is confidential and proprietary to the
++     copyright owners. Reproduction or disclosure, in whole or in part, or the
++     production of derivative works therefrom without the express permission of
++     the copyright owners is prohibited.
++
++     Copyright (C) 2020-2021 by Dolby Laboratories,
++     All rights reserved.
++
++-->
++<manifest version="1.0" type="device">
++    <hal format="hidl">
++        <name>android.hardware.media.c2</name>
++        <transport>hwbinder</transport>
++        <fqname>@1.0::IComponentStore/default1</fqname>
++    </hal>
++</manifest>
+-- 
+2.34.1
